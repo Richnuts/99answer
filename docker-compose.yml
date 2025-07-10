@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  listing:
+    container_name: listing-service
+    build: ./listingService
+    networks:
+      - 99backend
+    volumes:
+      - ./listingService/listings.db:/app/listings.db 
+
+  # user:
+  #   container_name: user-service
+  #   build: ./user-service
+  #   ports:
+  #     - "9002:9002"
+  #   networks:
+  #     - 99backend
+  #   volumes:
+  #     - ./userService/user.db:/app/data/user.db
+
+  gateway:
+    container_name: api-gateway
+    build: ./apiGateway
+    ports:
+      - "9001:9001"
+    networks:
+      - 99backend
+    environment:
+      - LISTING_SERVICE=http://listing-service:6000
+      - USER_SERVICE=http://user-service:9002
+
+networks:
+  99backend:

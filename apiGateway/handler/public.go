@@ -12,20 +12,28 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type PublicHandler struct {
+type publicHandler struct {
 	ListingClient *listing.ListingClient
 	UserClient    *user.UserClient
 }
 
-func NewPublicHandler(cfg *config.Config) *PublicHandler {
-	return &PublicHandler{
+type Handler interface {
+	CreateListing(c echo.Context) error
+	CreateUser(c echo.Context) error
+	GetListings(c echo.Context) error
+	GetUser(c echo.Context) error
+	GetUsers(c echo.Context) error
+}
+
+func NewPublicHandler(cfg *config.Config) Handler {
+	return &publicHandler{
 		ListingClient: listing.NewListingClient(cfg.ListingSvcURL),
 		UserClient:    user.NewUserClient(cfg.UserSvcURL),
 	}
 }
 
 // GET /public-api/listings
-func (h *PublicHandler) GetListings(c echo.Context) error {
+func (h *publicHandler) GetListings(c echo.Context) error {
 	params := url.Values{}
 	if p := c.QueryParam("page_num"); p != "" {
 		params.Set("page_num", p)
@@ -47,7 +55,7 @@ func (h *PublicHandler) GetListings(c echo.Context) error {
 }
 
 // POST /public-api/listings
-func (h *PublicHandler) CreateListing(c echo.Context) error {
+func (h *publicHandler) CreateListing(c echo.Context) error {
 	userID := c.FormValue("user_id")
 	price := c.FormValue("price")
 	_, err := strconv.Atoi(price)
@@ -75,7 +83,7 @@ func (h *PublicHandler) CreateListing(c echo.Context) error {
 }
 
 // POST /public-api/users
-func (h *PublicHandler) CreateUser(c echo.Context) error {
+func (h *publicHandler) CreateUser(c echo.Context) error {
 	name := c.FormValue("name")
 	if name == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "name is required"})
@@ -94,7 +102,7 @@ func (h *PublicHandler) CreateUser(c echo.Context) error {
 }
 
 // GET /public-api/users/:id
-func (h *PublicHandler) GetUser(c echo.Context) error {
+func (h *publicHandler) GetUser(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "user ID is required"})
@@ -110,7 +118,7 @@ func (h *PublicHandler) GetUser(c echo.Context) error {
 }
 
 // GET /public-api/users
-func (h *PublicHandler) GetUsers(c echo.Context) error {
+func (h *publicHandler) GetUsers(c echo.Context) error {
 	params := url.Values{}
 	if p := c.QueryParam("page_num"); p != "" {
 		params.Set("page_num", p)

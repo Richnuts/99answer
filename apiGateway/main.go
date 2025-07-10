@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
@@ -14,6 +15,7 @@ func main() {
 
 	publicHandler := handler.NewPublicHandler(cfg)
 	// Nice to have : req-id
+	e.Use(middleware.Logger())
 	// Routes
 	// listings
 	e.GET("/public-api/listings", publicHandler.GetListings)

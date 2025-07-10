@@ -1,3 +1,5 @@
-
-listing:
-	python listing_service.py --port=6000 --debug=true
+build:
+	docker-compose up --build -d
+	
+down:
+	docker-compose down

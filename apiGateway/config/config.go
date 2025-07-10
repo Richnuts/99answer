@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Port          int    `envconfig:"PORT" default:"9001"`
 	ListingSvcURL string `envconfig:"LISTING_SERVICE" default:"http://localhost:6000"`
-	UserSvcURL    string `envconfig:"USER_SERVICE" default:"http://localhost:9003"`
+	UserSvcURL    string `envconfig:"USER_SERVICE" default:"http://localhost:9002"`
 }
 
 func NewConfig() *Config {

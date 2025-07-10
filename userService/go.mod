@@ -1,12 +1,13 @@
-module 99gateway
+module 99user
 
 go 1.23.3
 
 require (
-	github.com/google/uuid v1.6.0
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/labstack/echo/v4 v4.13.4
+	github.com/mattn/go-sqlite3 v1.14.28
 )
 
 require (
@@ -19,4 +20,5 @@ require (
 	golang.org/x/net v0.40.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/time v0.11.0 // indirect
 )
