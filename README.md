@@ -6,9 +6,9 @@
 
 This project consists of 3 services:
 
-- **gateway** — API Gateway (Go + Echo)
-- **listingService** — Service to manage listings (Python + Tornado + SQLite)
-- **userService** — Service to manage users (Go + Echo + SQLite)
+- **gateway** — API Gateway (Go + Echo) — **default port 9001**
+- **listingService** — Listings (Python + Tornado + SQLite) — **default port 6000**
+- **userService** — Users (Go + Echo + SQLite) — **default port 9002**
 
 ## 🚀 How to Run
 
@@ -69,7 +69,7 @@ docker-compose restart
 ## 📂 Notes
 
 - SQLite database files (`listings.db`, `user.db`) are mounted as volumes and shared between services.
-- Make sure ports `9001`, `6000`, and `9002` are free before starting.
+- Make sure the port used (in default case ports `9001`, `6000`, and `9002`) are free before starting.
 - You can use `docker-compose ps` to check service status.
 
 Enjoy! 🚀
