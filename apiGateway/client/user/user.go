@@ -1,6 +1,8 @@
 package user
 
 import (
+	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/url"
 )
@@ -17,9 +19,15 @@ func NewUserClient(baseURL string) *UserClient {
 	}
 }
 
-func (uc *UserClient) CreateUser(params url.Values) (*http.Response, error) {
+func (uc *UserClient) CreateUser(input CreateUserInput) (*http.Response, error) {
 	u := uc.BaseURL + "/users"
-	return uc.Client.PostForm(u, params)
+
+	body, err := json.Marshal(input)
+	if err != nil {
+		return nil, err
+	}
+
+	return uc.Client.Post(u, "application/json", bytes.NewReader(body))
 }
 
 func (uc *UserClient) GetUser(id string) (*http.Response, error) {

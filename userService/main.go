@@ -3,6 +3,7 @@ package main
 import (
 	"99user/config"
 	"99user/handler"
+	"99user/repository"
 	"log"
 
 	"fmt"
@@ -20,7 +21,8 @@ func main() {
 	// Nice to have : req-id
 	e.Use(middleware.Logger())
 	db := NewDatabase(cfg.Database)
-	userHandler := handler.NewUserHandler(db)
+	repo := repository.NewRepository(db)
+	userHandler := handler.NewUserHandler(repo)
 	// Route
 	e.POST("/users", userHandler.CreateUser)
 	e.GET("/users/:id", userHandler.GetUser)

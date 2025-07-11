@@ -15,3 +15,7 @@ func Success(c echo.Context, resp *http.Response) error {
 
 	return c.JSON(resp.StatusCode, result)
 }
+
+func ErrorResponse(c echo.Context, code int, err error) error {
+	return c.JSON(code, map[string]interface{}{"error": []string{err.Error()}})
+}

@@ -5,6 +5,7 @@ import (
 	"99gateway/client/user"
 	"99gateway/config"
 	"99gateway/utils"
+	"errors"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -47,7 +48,7 @@ func (h *publicHandler) GetListings(c echo.Context) error {
 
 	resp, err := h.ListingClient.GetListings(params)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return utils.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 	defer resp.Body.Close()
 
@@ -60,12 +61,12 @@ func (h *publicHandler) CreateListing(c echo.Context) error {
 	price := c.FormValue("price")
 	_, err := strconv.Atoi(price)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "invalid price value"})
+		return utils.ErrorResponse(c, http.StatusBadRequest, errors.New("invalid price value"))
 	}
 	ListingType := c.FormValue("listing_type")
 
 	if userID == "" || price == "" || ListingType == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "missing fields"})
+		return utils.ErrorResponse(c, http.StatusBadRequest, errors.New("missing fields"))
 	}
 
 	params := url.Values{}
@@ -75,7 +76,7 @@ func (h *publicHandler) CreateListing(c echo.Context) error {
 
 	resp, err := h.ListingClient.CreateListing(params)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return utils.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 	defer resp.Body.Close()
 
@@ -86,15 +87,12 @@ func (h *publicHandler) CreateListing(c echo.Context) error {
 func (h *publicHandler) CreateUser(c echo.Context) error {
 	name := c.FormValue("name")
 	if name == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "name is required"})
+		return utils.ErrorResponse(c, http.StatusBadRequest, errors.New("name is required"))
 	}
 
-	params := url.Values{}
-	params.Set("name", name)
-
-	resp, err := h.UserClient.CreateUser(params)
+	resp, err := h.UserClient.CreateUser(user.CreateUserInput{Name: name})
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return utils.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 	defer resp.Body.Close()
 
@@ -105,12 +103,12 @@ func (h *publicHandler) CreateUser(c echo.Context) error {
 func (h *publicHandler) GetUser(c echo.Context) error {
 	id := c.Param("id")
 	if id == "" {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "user ID is required"})
+		return utils.ErrorResponse(c, http.StatusBadRequest, errors.New("user ID is required"))
 	}
 
 	resp, err := h.UserClient.GetUser(id)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return utils.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 	defer resp.Body.Close()
 
@@ -129,7 +127,7 @@ func (h *publicHandler) GetUsers(c echo.Context) error {
 
 	resp, err := h.UserClient.GetUsers(params)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		return utils.ErrorResponse(c, http.StatusInternalServerError, err)
 	}
 	defer resp.Body.Close()
 

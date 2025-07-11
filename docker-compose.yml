@@ -9,15 +9,15 @@ services:
     volumes:
       - ./listingService/listings.db:/app/listings.db 
 
-  # user:
-  #   container_name: user-service
-  #   build: ./user-service
-  #   ports:
-  #     - "9002:9002"
-  #   networks:
-  #     - 99backend
-  #   volumes:
-  #     - ./userService/user.db:/app/data/user.db
+  user:
+    container_name: user-service
+    build: ./userService
+    ports:
+      - "9002:9002"
+    networks:
+      - 99backend
+    volumes:
+      - ./userService/user.db:/app/user.db
 
   gateway:
     container_name: api-gateway
